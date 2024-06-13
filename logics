@@ -1,0 +1,26 @@
+
+Take/get image
+
+# Image sent to server?
+
+Open image with cv
+
+Image processing
+    # Colour processing and stripping - if needed at all
+        # Find main colour of image?
+        # strip channels based on found colour
+        # return relevant channel
+
+    # Bounding boxes?
+
+# create object to add incoming data into
+
+run pytesseract to extract strings of text
+
+save strings into relevant object
+
+upload object in to database
+
+return to user message of result
+
+#offer to show user result in table?
