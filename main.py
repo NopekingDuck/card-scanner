@@ -4,28 +4,34 @@ import cv2
 import numpy as np
 import loader
 
-im_file = "jpegs/bb_page_0.jpg"
-p_img = "original/test_kai.png"
+im_file = "jpegs/card_0_0.jpg"
+p_img = "card_0_0_process.jpg"
 
 
 def process_image(image):
     # im = Image.open(image)
     im = cv2.imread(image)
-    g_im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-    thresh, bw_im = cv2.threshold(g_im, 200, 230, cv2.THRESH_BINARY)
     # red = get_red_channel(im)
     # revert = cv2.bitwise_not(no_noise)
-    # no_noise = denoise(bw_im)
-    cv2.imwrite("\insert filename here", bw_im)
+    filtered_im = filter2d(im)
+    # g_im = cv2.cvtColor(filtered_im, cv2.COLOR_BGR2GRAY)
+    # thresh, bw_im = cv2.threshold(g_im, 90, 255, cv2.THRESH_BINARY)
+    # cv2.imshow("filtered", bw_im)
+    # cv2.waitKey(0)
+    cv2.imwrite("card_0_0_process.jpg", filtered_im)
 
 
-def denoise(image):
-    kernel = np.ones((1, 1), np.uint8)
-    image = cv2.dilate(image, kernel, iterations=1)
-    kernel = np.ones((2, 2), np.uint8)
-    image = cv2.erode(image, kernel, iterations=1)
-    image = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
-    image = cv2.medianBlur(image, 3)
+def filter2d(image):
+    # kernel = np.ones((2, 2), np.uint8)
+    # image = cv2.erode(image, kernel, iterations=1)
+    # kernel = np.ones((1, 1), np.uint8)
+    # image = cv2.dilate(image, kernel, iterations=1)
+    kernel = np.array([[0, -2, 0], [-2, 4, 1], [0, 1, 0]])
+    image = cv2.filter2D(image, -1, kernel)
+    kernel = np.ones((1, 2), np.uint8)
+    # image = cv2.erode(image, kernel, iterations=1)
+    image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+    # image = cv2.medianBlur(image, 3)
     return image
 
 # def get_red_channel(image):
@@ -64,14 +70,23 @@ def crop_image(image):
         cv2.imwrite('jpegs/bb_page_0_cropped.jpg', crop)
 
 
+def draw_rect(image):
+    im = cv2.imread(image)
+    cv2.rectangle(im, (50, 18), (215, 58), (0, 255, 255), 3)
+    cv2.imshow("rect", im)
+    cv2.waitKey(0)
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # loader.convert_pdf_to_image("original")
     # images = loader.load_images("jpegs")
-    crop_image(im_file)
+    # crop_image(im_file)
+    # split_image('jpegs/bb_page_0_cropped.jpg')
     # process_image(im_file)
     # get_text(p_img)
-    split_image('jpegs/bb_page_0_cropped.jpg')
+    draw_rect(p_img)
+
 
 
 
