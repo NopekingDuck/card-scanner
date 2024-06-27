@@ -1,4 +1,33 @@
+To do
 
+
+
+Draw boxes over text
+mask to get only those boxes
+run pyteseeract on each box
+
+Crop - done
+split - done
+filter - done
+Fix loader so it iterates over files instead of just one - DONE - Issue as that pages were overwriting one page because
+ the name wasn't changing
+
+
+--------------------------------------------------------------
+Convert Pdfs - jpg
+Crop each jpg
+split each jpg into cards
+
+FOR EACH CARD IN DIRECTORY
+load a card into mem
+apply filters
+crop prepared segments from card into temp
+run text extract on each segment
+output into ? CSV?
+delete cropped parts[?]
+next card
+
+--------------------------------------------------------------
 Take/get image
 
 # Image sent to server?

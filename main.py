@@ -2,10 +2,12 @@ from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
-import loader
+import json
+import converter
 
-im_file = "jpegs/card_0_0.jpg"
+im_file = "cards/card_0_0.jpg"
 p_img = "card_0_0_process.jpg"
+nt = "bb_page_0_cropped_segment_1.jpg"
 
 
 def process_image(image):
@@ -34,15 +36,9 @@ def filter2d(image):
     # image = cv2.medianBlur(image, 3)
     return image
 
-# def get_red_channel(image):
-#     r_c_g = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#     (R, G, B) = cv2.split(image)
-#     # cv2.namedWindow("red", cv2.WINDOW_NORMAL)
-#     return B
-
 
 def get_text(image):
-    c_text = pytesseract.image_to_string(image)
+    c_text = pytesseract.image_to_string(image, config='--psm 1')
     print(c_text)
 
 
@@ -54,38 +50,63 @@ def split_image(image):
     for y in range(0, img.shape[0], tile_height):
         for x in range(0, img.shape[1], tile_width):
             tile = img[y:y+tile_height, x:x+tile_width]
-            cv2.imwrite(f'jpegs/card_{y}_{x}.jpg', tile)
+            cv2.imwrite(f'cards/card_{y}_{x}.jpg', tile)
 
 
 def crop_image(image):
-    # for image in images:
-        # filename = consider making each card an object with a file name and np.array
-        image = cv2.imread(image)
-        grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        thresh, thresh_img = cv2.threshold(grey, 80, 255, cv2.THRESH_BINARY)
-        points = np.argwhere(thresh_img == 0)
-        points = np.fliplr(points)
-        x, y, w, h = (cv2.boundingRect(points))
-        crop = image[y:y+h, x:x+w]
-        cv2.imwrite('jpegs/bb_page_0_cropped.jpg', crop)
+    image = cv2.imread(image)
+    grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    thresh, thresh_img = cv2.threshold(grey, 80, 255, cv2.THRESH_BINARY)
+    points = np.argwhere(thresh_img == 0)
+    points = np.fliplr(points)
+    x, y, w, h = (cv2.boundingRect(points))
+    crop = image[y:y+h, x:x+w]
+    cv2.imwrite('jpegs/cropped/bb_page_0_cropped.jpg', crop)
 
 
-def draw_rect(image):
+def draw_rects(image):
+    ### split into get_name, get_level etc
+    ### pull from json for coords
     im = cv2.imread(image)
-    cv2.rectangle(im, (50, 18), (215, 58), (0, 255, 255), 3)
-    cv2.imshow("rect", im)
-    cv2.waitKey(0)
+    with open('card_coordinates.json') as json_file:
+        card_coordinates = json.load(json_file)
 
+    level = get_level(im, card_coordinates['level'])
+    name = get_name(im, card_coordinates['name'])
+
+    # crop = im[370:490, 40:460]
+    # name_crop = im[12:56, 46:294]
+    # cv2.imshow("level", level)
+    # cv2.waitKey(0)
+    # cv2.imwrite("bb_page_0_cropped_segment_1.jpg", crop)
+
+
+def get_level(image, coords):
+    mask = np.zeros_like(image, np.uint8)
+    center = (coords['x'], coords['y'])
+    radius = coords['radius']
+    cv2.circle(mask, center, radius, (255, 255, 255), -1)
+    result = cv2.bitwise_and(image, mask)
+    gray = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
+    contours, _ = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    x, y, w, h = cv2.boundingRect(contours[0])
+    crop = result[y:y+h, x:x+w]
+    return crop
+
+
+def get_name(image, coords):
+    crop = image[coords['y']:coords['h'], coords['x']:coords['w']]
+    return crop
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # loader.convert_pdf_to_image("original")
-    # images = loader.load_images("jpegs")
+    # converter.convert_pdf_to_image("pdfs")
     # crop_image(im_file)
     # split_image('jpegs/bb_page_0_cropped.jpg')
     # process_image(im_file)
+    draw_rects(p_img)
+
     # get_text(p_img)
-    draw_rect(p_img)
 
 
 

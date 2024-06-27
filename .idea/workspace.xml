@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="673b73da-f5f8-456c-80ed-6924ba8fe27f" name="Changes" comment="poc load pdf, crop and split">
+    <list default="true" id="673b73da-f5f8-456c-80ed-6924ba8fe27f" name="Changes" comment="strip colour, start mask work">
+      <change afterPath="$PROJECT_DIR$/card_coordinates.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/converter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logics" beforeDir="false" afterPath="$PROJECT_DIR$/logics" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,6 +46,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/jpegs/cropped" />
+      <recent name="$PROJECT_DIR$/pdfs" />
+      <recent name="$PROJECT_DIR$/cards" />
       <recent name="$PROJECT_DIR$/temp" />
     </key>
   </component>
@@ -94,11 +100,20 @@
       <option name="project" value="LOCAL" />
       <updated>1718278931553</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="strip colour, start mask work">
+      <option name="closed" value="true" />
+      <created>1718878041784</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1718878041784</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="poc load pdf, crop and split" />
-    <option name="LAST_COMMIT_MESSAGE" value="poc load pdf, crop and split" />
+    <MESSAGE value="strip colour, start mask work" />
+    <option name="LAST_COMMIT_MESSAGE" value="strip colour, start mask work" />
   </component>
 </project>
