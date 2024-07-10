@@ -1,67 +1,33 @@
-from PIL import Image
-import pytesseract
-import cv2
-import numpy as np
+import csv
 import json
+import re
+import cv2
+import pytesseract
+import numpy as np
+import glob
 import converter
+import constants
 
-im_file = "cards/card_0_0.jpg"
-p_img = "card_0_0_process.jpg"
-nt = "bb_page_0_cropped_segment_1.jpg"
+
+
 
 
 def process_image(image):
-    # im = Image.open(image)
-    im = cv2.imread(image)
-    # red = get_red_channel(im)
-    # revert = cv2.bitwise_not(no_noise)
-    filtered_im = filter2d(im)
-    # g_im = cv2.cvtColor(filtered_im, cv2.COLOR_BGR2GRAY)
-    # thresh, bw_im = cv2.threshold(g_im, 90, 255, cv2.THRESH_BINARY)
-    # cv2.imshow("filtered", bw_im)
-    # cv2.waitKey(0)
-    cv2.imwrite("card_0_0_process.jpg", filtered_im)
+    filtered_im = filter2d(image)
+    return filtered_im
 
 
 def filter2d(image):
-    # kernel = np.ones((2, 2), np.uint8)
-    # image = cv2.erode(image, kernel, iterations=1)
-    # kernel = np.ones((1, 1), np.uint8)
-    # image = cv2.dilate(image, kernel, iterations=1)
     kernel = np.array([[0, -2, 0], [-2, 4, 1], [0, 1, 0]])
     image = cv2.filter2D(image, -1, kernel)
     kernel = np.ones((1, 2), np.uint8)
-    # image = cv2.erode(image, kernel, iterations=1)
     image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
-    # image = cv2.medianBlur(image, 3)
     return image
 
 
-def get_text(image):
-    c_text = pytesseract.image_to_string(image, config='--psm 1')
-    print(c_text)
-
-
-def split_image(image):
-    img = cv2.imread(image)
-    tile_height = int(img.shape[0] / 3) + 1
-    tile_width = int(img.shape[1] / 3) + 1
-
-    for y in range(0, img.shape[0], tile_height):
-        for x in range(0, img.shape[1], tile_width):
-            tile = img[y:y+tile_height, x:x+tile_width]
-            cv2.imwrite(f'cards/card_{y}_{x}.jpg', tile)
-
-
-def crop_image(image):
-    image = cv2.imread(image)
-    grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh, thresh_img = cv2.threshold(grey, 80, 255, cv2.THRESH_BINARY)
-    points = np.argwhere(thresh_img == 0)
-    points = np.fliplr(points)
-    x, y, w, h = (cv2.boundingRect(points))
-    crop = image[y:y+h, x:x+w]
-    cv2.imwrite('jpegs/cropped/bb_page_0_cropped.jpg', crop)
+def invert_colour(image):
+    _, invert = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)
+    return invert
 
 
 def draw_rects(image):
@@ -71,14 +37,44 @@ def draw_rects(image):
     with open('card_coordinates.json') as json_file:
         card_coordinates = json.load(json_file)
 
-    level = get_level(im, card_coordinates['level'])
-    name = get_name(im, card_coordinates['name'])
+    # return image part based on coordinates and pair with the best config to return good text results
+    level = [get_level(im, card_coordinates['level']), 6]
+    name = [get_rect_part(im, card_coordinates['name']), 11]
+    health = [get_rect_part(im, card_coordinates['health']), 7]
+    body = [get_rect_part(im, card_coordinates['body']), 6]
+    body_inv = [invert_colour(body[0]), 6]
 
-    # crop = im[370:490, 40:460]
-    # name_crop = im[12:56, 46:294]
-    # cv2.imshow("level", level)
-    # cv2.waitKey(0)
-    # cv2.imwrite("bb_page_0_cropped_segment_1.jpg", crop)
+    health[0] = invert_colour(health[0])
+
+    card_data = []
+    components = (level, name, health, body, body_inv)
+    for part in components:
+        text = get_text(part[0], part[1])
+        card_data.append(text)
+
+    return card_data
+
+# def separate_body(image):
+#     pro = process_image(image)
+#     grey = cv2.cvtColor(pro, cv2.COLOR_BGR2GRAY)
+#     blur = cv2.GaussianBlur(grey, (7, 7), 0)
+#     _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+#     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 8))
+#     dilate = cv2.dilate(thresh, kernel, iterations=1)
+#     cv2.imshow('conts', dilate)
+#     cv2.waitKey(0)
+#     cnts, _ = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+#     for c in cnts:
+#         area = cv2.contourArea(c)
+#         if area > 10060:
+#             x, y, w, h = cv2.boundingRect(c)
+#             print(x, y, w, h)
+#             ha = cv2.rectangle(pro, (x, y), (w, h), (0, 255, 0), 3)
+#             cv2.imshow("rect", ha)
+#             cv2.waitKey(0)
+#     # cv2.imshow('conts', wit)
+#     # cv2.waitKey(0)
+#     return 1
 
 
 def get_level(image, coords):
@@ -94,19 +90,54 @@ def get_level(image, coords):
     return crop
 
 
-def get_name(image, coords):
+def get_rect_part(image, coords):
     crop = image[coords['y']:coords['h'], coords['x']:coords['w']]
     return crop
 
+
+def get_text(image, config):
+    card_text = pytesseract.image_to_string(image, config=f'--psm {config}')
+    return card_text
+
+
+def export_card_to_csv(file):
+    filename = file
+    path = "cards/*.jpg"
+
+    # for each card in directory
+    for card in glob.iglob(path):
+        card_data = draw_rects(card)
+        trimmed_card_data = trim_text(card_data)
+        with open(filename, mode='a') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(trimmed_card_data)
+
+    csvfile.close()
+
+
+def make_csv(file):
+    with open(file, mode='a', newline='') as csvfile:
+        fieldnames = ('level', 'name', 'health', 'body_attacks', 'body_skills')
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+
+def trim_text(card_data):
+    for level in ('1', '2', '3'):
+        if level in card_data[0]:
+            card_data[0] = level
+
+    card_data[1] = card_data[1][:-2]
+    card_data[2] = re.sub(r'\D', '', card_data[2]) # remove anything but digits
+    return card_data
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # converter.convert_pdf_to_image("pdfs")
-    # crop_image(im_file)
-    # split_image('jpegs/bb_page_0_cropped.jpg')
-    # process_image(im_file)
-    draw_rects(p_img)
+    converter.convert_pdf_to_image(constants.PDF_PATH)
+    converter.crop_image(constants.JPEGS_PATH)
+    converter.split_image(constants.CROPPED_PATH)
+    export_card_to_csv(constants.CSV_NAME)
 
-    # get_text(p_img)
 
 
 

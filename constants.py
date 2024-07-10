@@ -1,0 +1,5 @@
+CSV_NAME = 'cards.csv'
+CARDS_PATH = 'cards'
+JPEGS_PATH = 'jpegs'
+CROPPED_PATH = 'jpegs/cropped'
+PDF_PATH = 'pdfs'
