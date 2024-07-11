@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="673b73da-f5f8-456c-80ed-6924ba8fe27f" name="Changes" comment="tidied and comments added.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/process_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/process_image.py" afterDir="false" />
+    <list default="true" id="673b73da-f5f8-456c-80ed-6924ba8fe27f" name="Changes" comment="show directories">
+      <change beforePath="$PROJECT_DIR$/cards.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logic.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_image.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +24,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "NopekingDuck"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/NopekingDuck/card-scanner",
+    "accountId": "acb1df92-f7dd-4014-97c2-262dd3da0ef4"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -158,8 +170,51 @@
       <option name="project" value="LOCAL" />
       <updated>1720610247467</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="tidied and comments added.">
+      <option name="closed" value="true" />
+      <created>1720690234982</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1720690234982</updated>
+    </task>
+    <task id="LOCAL-00007" summary="removed commented lines and tweak gitignore">
+      <option name="closed" value="true" />
+      <created>1720690300871</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1720690300871</updated>
+    </task>
+    <task id="LOCAL-00008" summary="removed commented lines and tweak gitignore">
+      <option name="closed" value="true" />
+      <created>1720690724855</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1720690724855</updated>
+    </task>
+    <task id="LOCAL-00009" summary="show directories">
+      <option name="closed" value="true" />
+      <created>1720691253895</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1720691253895</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="poc load pdf, crop and split" />
@@ -167,6 +222,8 @@
     <MESSAGE value="start to break down card parts" />
     <MESSAGE value="end-to-end journey" />
     <MESSAGE value="tidied and comments added." />
-    <option name="LAST_COMMIT_MESSAGE" value="tidied and comments added." />
+    <MESSAGE value="removed commented lines and tweak gitignore" />
+    <MESSAGE value="show directories" />
+    <option name="LAST_COMMIT_MESSAGE" value="show directories" />
   </component>
 </project>
