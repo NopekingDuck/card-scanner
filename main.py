@@ -101,8 +101,8 @@ def export_card_to_csv(file):
 
 
 if __name__ == '__main__':
-    # converter.convert_pdf_to_image(constants.PDF_PATH)
-    # converter.crop_image(constants.JPEGS_PATH)
+    converter.convert_pdf_to_image(constants.PDF_PATH)
+    converter.crop_image(constants.JPEGS_PATH)
     converter.split_image(constants.CROPPED_PATH)
     make_csv(constants.CSV_NAME)
     export_card_to_csv(constants.CSV_NAME)
