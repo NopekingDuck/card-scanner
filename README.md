@@ -16,15 +16,16 @@
 ![screenshot of an individual card](https://github.com/NopekingDuck/card-scanner/assets/124461571/f90fd3d0-d3db-4f62-a808-b15d23c27544)
 
 <h2>Getting Started</h2>
-#clone repo
-# add pdfs to pdf
-#install requirements: pip install -r requirements.txt
-# run main
+<ol>
+  <li>Clone the repository</li>
+  <li>pip install -r requirements.txt</li>
+  <li>run main.py</li>
+</ol>
 
-#improvements
 
-#contirubting 
-#Papermark is an open-source project and we welcome contributions from the community.
+<h2>Future Improvements</h2>
+<ul>
+  <li>Smarter edge detecton on text areas to more precisely find text</li>
+</ul>
 
-If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are warmly welcome.
-#add license
+
